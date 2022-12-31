@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
-{% block title %}Inscription{% endblock %}
+{% block title %}Inscription
+{{ parent() }}
+{% endblock %}
 {% block body %}
 {% for flash_error in app.flashes('verify_email_error') %}
 <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
@@ -13,7 +15,6 @@
                 'label': 'Mot de passe',
                 'attr': {'class': 'form-control password-strength-indicator'}
             }) }}
-            {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
             <button type="submit" class="btn btn-primary btn-block mt-4">S'inscrire</button>
         {{ form_end(registrationForm) }}
     </div>

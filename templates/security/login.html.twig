@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion{% endblock %}
+{% block title %}Connexion
+{{ parent() }}
+{% endblock %}
 
 {% block body %}
 <form method="post" class="form-horizontal">

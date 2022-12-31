@@ -1,3 +1,7 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-6">
+<header>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <a class="navbar-brand" href="#">
     <img src="logo.png" alt="Logo de l'entreprise" width="30" height="30">
@@ -9,13 +13,13 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
-        <a class="nav-link text-dark" href="#">Accueil</a>
+        <a class="nav-link text-dark" href={{ path("home") }}>Accueil</a>
       </li>
       <li class="nav-item">
         <a class="nav-link text-dark" href="#">À propos</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link text-dark" href="#">Contact</a>
+        <a class="nav-link text-dark" href={{ path("home_contact") }}>Contact</a>
       </li>
 {% if app.user is empty%}
 <!-- Liens de connexion et d'inscription -->
@@ -25,7 +29,9 @@
 <li class="nav-item">
   <a class="nav-link text-dark" href="{{ path('app_register') }}"><i class="fas fa-user-plus"></i> Inscription</a>
 </li>
+</ul>
 {% endif %}
-   </ul>
-</div>
+  </div>
 </nav>
+</header>
+</div>

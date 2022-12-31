@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon compte
+{{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <h1>Modifier mon compte</h1>
+    {{ include('user/_form.html.twig', {'button_label': 'Mise à jour'}) }}
+{% endblock %}

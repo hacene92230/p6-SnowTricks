@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Sahreply
+			{% block title %}Hacène SnowTrick
 			{% endblock %}
 		</title>
 <meta property="og:url"           content="https://www.facebook.com/Sahreply-101036832043176" />
@@ -18,7 +18,7 @@
 	<body>
 {% include "shared/nav.html.twig" %}	
 {% if app.user %}
-		{% include "shared/headerUser.html.twig" %}	
+		{% include "shared/MenuUser.html.twig" %}	
 	{% if is_granted('ROLE_ADMIN') %}
 {% include "shared/headerAdmin.html.twig" %}
 				{% endif %}
