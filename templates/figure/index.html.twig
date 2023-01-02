@@ -1,12 +1,10 @@
 {% extends 'base.html.twig' %}
-
 {% block title %}Figure index{% endblock %}
-
 {% block body %}
-    <h1>Figure index</h1>
-
-    <table class="table">
-        <thead>
+<div class="container">
+<h1 class="text-center my-5">Figure index</h1>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
             <tr>
                 <th>Id</th>
                 <th>Name</th>
@@ -27,17 +25,20 @@
                 <td>{{ figure.modifiedAt ? figure.modifiedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ figure.imgfilename }}</td>
                 <td>
-                    <a href="{{ path('app_figure_show', {'id': figure.id}) }}">show</a>
-                    <a href="{{ path('app_figure_edit', {'id': figure.id}) }}">edit</a>
+                    <a href="{{ path('app_figure_show', {'id': figure.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> show</a>
+                    <a href="{{ path('app_figure_edit', {'id': figure.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7" class="text-center">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_figure_new') }}">Create new</a>
+    <div class="text-center my-5">
+        <a href="{{ path('app_figure_new') }}" class="btn btn-secondary btn-sm"><i class="fas fa-plus"></i> Create new</a>
+    </div>
+</div>
 {% endblock %}
