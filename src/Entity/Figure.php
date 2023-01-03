@@ -27,9 +27,6 @@ class Figure
     #[ORM\Column]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $imgfilename = null;
-
     #[ORM\ManyToOne(inversedBy: 'figures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?groupe $groupe = null;
@@ -95,18 +92,6 @@ class Figure
     public function setModifiedAt(\DateTimeImmutable $modifiedAt): self
     {
         $this->modifiedAt = $modifiedAt;
-
-        return $this;
-    }
-
-    public function getImgfilename(): ?string
-    {
-        return $this->imgfilename;
-    }
-
-    public function setImgfilename(?string $imgfilename): self
-    {
-        $this->imgfilename = $imgfilename;
 
         return $this;
     }

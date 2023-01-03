@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ContactType;
+use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,13 +12,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'app_home')]
-    public function index(): Response
+    const ITEMS_PER_PAGE = 6;
+    #[Route('/home/figure/page/{page}', name: 'app_home')]
+    public function index(FigureRepository $fgr, int $page): Response
     {
+        $totalItems = $fgr->count([]);
+        $totalPages = ceil($totalItems / self::ITEMS_PER_PAGE);
+        if ($page < 1 || $page > $totalPages) {
+            throw $this->createNotFoundException('La page demandée n\'existe pas');
+        }
+        $offset = ($page - 1) * self::ITEMS_PER_PAGE;
+        $figures = $fgr->findBy([], [], self::ITEMS_PER_PAGE, $offset);
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
+            'figures' => $figures,
+            'current_page' => $page,
+            'total_pages' => $totalPages,
         ]);
     }
+
 
 
     /**
