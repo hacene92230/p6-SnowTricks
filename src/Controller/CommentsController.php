@@ -2,36 +2,34 @@
 
 namespace App\Controller;
 
+use DateTimeImmutable;
 use App\Entity\Comments;
 use App\Form\CommentsType;
+use App\Repository\FigureRepository;
 use App\Repository\CommentsRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/comments')]
 class CommentsController extends AbstractController
 {
-    #[Route('/', name: 'app_comments_index', methods: ['GET'])]
-    public function index(CommentsRepository $commentsRepository): Response
-    {
-        return $this->render('comments/index.html.twig', [
-            'comments' => $commentsRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_comments_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommentsRepository $commentsRepository): Response
+    #[Route('/new/comment/figure/{figure}', name: 'app_comments_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, CommentsRepository $commentsRepository, FigureRepository $figureRepository): Response
     {
         $comment = new Comments();
         $form = $this->createForm(CommentsType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $figure = $request->attributes->get('figure');
+            $comment->setAuthor($this->getUser())
+                ->setFigure($figureRepository->findOneById($figure))
+                ->setCreatedAt(new DateTimeImmutable());
             $commentsRepository->save($comment, true);
 
-            return $this->redirectToRoute('app_comments_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
         return $this->renderForm('comments/new.html.twig', [
             "comment" => $comment,

@@ -23,6 +23,9 @@ class Comments
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?Figure $figure = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Comments
     public function setFigure(?Figure $figure): self
     {
         $this->figure = $figure;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

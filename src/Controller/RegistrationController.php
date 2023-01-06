@@ -32,7 +32,7 @@ class RegistrationController extends AbstractController
     {
         if (!empty($this->getUser())) {
             return $this->redirectToRoute('home');
-                }
+        }
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -45,6 +45,11 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user = $form->getData();
+            $avatarFile = $form['avatar']->getData();
+            if ($avatarFile) {
+                $user->setAvatar(file_get_contents($avatarFile->getRealPath()));
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();

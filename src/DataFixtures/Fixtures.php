@@ -16,6 +16,7 @@ class Fixtures extends Fixture
     {
         //création d'un user
         $user = new User();
+$user->setName("hacene");
         $user->setEmail("hacenesahraoui.paris@gmail.com");
         $user->setPassword('$2y$13$f1fGqjshfGN90SoHUM4WcOCMs8ewjG02w5/gIqbvZHKwm5gOx7uQu');
         $manager->persist($user);
