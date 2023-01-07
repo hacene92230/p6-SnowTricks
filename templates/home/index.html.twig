@@ -37,25 +37,50 @@
 							<h2 class="font-weight-bold">Dernière modification</h2>
 							<p>{{ figure.modifiedAt|date("d/m/Y") }}</p>
 						</div>
-						<h2 class="font-weight-bold">Commentaires</h2>
+
+						<h2 class="font-weight-bold text-center mb-3">Commentaires</h2>
 						<div class="container">
 							<div class="row">
 								<div class="col-md-9">
-									{% for comment in figure.comments|reverse %}
+									{% for comment in figure.comments %}
 										<div class="media">
+											<img src="data:image/png;base64, {{ comment.author.avatar }}" alt="Avatar de l'utilisateur" class="mr-3 rounded-circle" style="width: 50px;">
 											<div class="media-body">
-												<h5 class="mt-0">{{ comment.author.name }}<img src="data:image/png;base64, {{ comment.author.avatar }}" alt="Avatar de l'utilisateur"></h5>
+												<h5 class="mt-0">{{ comment.author.name }}</h5>
 												{{ comment.content }}
-												(Le {{ comment.createdAt|date('d/m/Y H:i:s') }})
+												(Le
+												{{ comment.createdAt|date('d/m/Y H:i:s') }})
 											</div>
 										</div>
 									{% endfor %}
 								</div>
+
+								<!-- Formulaire de pagination pour les commentaires de chaque figure -->
+								<nav aria-label="Pagination des commentaires">
+									<ul class="pagination justify-content-center">
+										{% if commentsOffset > 0 %}
+											<li class="page-item">
+												<a class="page-link" href="{{ path('app_home', {'page': page - 1}) }}" aria-label="Page précédente">Précédente</a>
+											</li>
+										{% endif %}
+										{% for i in 1..commentsPagesCount %}
+											<li class="page-item {% if i == page %}active{% endif %}">
+												<a class="page-link" href="{{ path('app_home', {'page': i}) }}">{{ i }}</a>
+											</li>
+										{% endfor %}
+										{% if commentsOffset + COMMENTS_PER_PAGE < totalComments %}
+											<li class="page-item">
+												<a class="page-link" href="{{ path('app_home', {'page': page + 1}) }}" aria-label="Page suivante">Suivante</a>
+											</li>
+										{% endif %}
+									</ul>
+								</nav>
+
 								{% if app.user %}
 									<div class="col-md-3">
 										<form id="form-{{ figure.id }}" action="{{ url('app_comments_new', {'figure': figure.id}) }}" method="post" class="ml-auto">
 											{{ form_widget(forms[figure.id]) }}
-											<button type="submit">Envoyer</button>
+											<button type="submit" class="btn btn-primary btn-block mt-3">Envoyer</button>
 										</form>
 									</div>
 								{% endif %}
@@ -70,7 +95,7 @@
 		</div>
 	{% endfor %}
 	<nav aria-label="Page">
-		<ul class="pagination">
+		<ul class="pagination justify-content-center">
 			{% for page in 1..total_pages %}
 				<li class="page-item{% if page == current_page %} active{% endif %}">
 					<a class="page-link" href="{{ path('app_home', {'page': page}) }}">{{ page }}</a>
