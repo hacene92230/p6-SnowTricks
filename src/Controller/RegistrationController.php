@@ -45,11 +45,25 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
-            $user = $form->getData();
-            $avatarFile = $form['avatar']->getData();
-            if ($avatarFile) {
-                $user->setAvatar(file_get_contents($avatarFile->getRealPath()));
+            // Récupérez l'image téléchargée
+            $image = $form->get('avatar')->getData();
+
+            // Vérifiez que l'image est au format JPG et qu'elle a été correctement téléchargée
+            if ($image->getMimeType() !== 'image/jpeg' || !$image->isValid()) {
+                $this->addFlash('danger', 'L\'image doit être au format JPG et elle n\'a pas été correctement téléchargée');
+                return $this->redirectToRoute('app_home');
             }
+
+            // Générez un nom unique pour l'image en utilisant la date du jour et l'identifiant de l'utilisateur
+            $filename = date('Y-m-d') . '-' . microtime(true) . '.jpg';
+            // Enregistrez l'image sur le serveur
+            try {
+                $image->move($this->getParameter('images_directory'), $filename);
+            } catch (FileException $e) {
+            }
+
+            // Mettez à jour l'avatar de l'utilisateur avec le nouveau nom de fichier
+            $user->setAvatar($filename);
 
             $entityManager->persist($user);
             $entityManager->flush();

@@ -48,6 +48,8 @@ class UserControllerTest extends WebTestCase
             'user[roles]' => 'Testing',
             'user[password]' => 'Testing',
             'user[isVerified]' => 'Testing',
+            'user[name]' => 'Testing',
+            'user[avatar]' => 'Testing',
         ]);
 
         self::assertResponseRedirects('/user/');
@@ -63,6 +65,8 @@ class UserControllerTest extends WebTestCase
         $fixture->setRoles('My Title');
         $fixture->setPassword('My Title');
         $fixture->setIsVerified('My Title');
+        $fixture->setName('My Title');
+        $fixture->setAvatar('My Title');
 
         $this->repository->save($fixture, true);
 
@@ -82,6 +86,8 @@ class UserControllerTest extends WebTestCase
         $fixture->setRoles('My Title');
         $fixture->setPassword('My Title');
         $fixture->setIsVerified('My Title');
+        $fixture->setName('My Title');
+        $fixture->setAvatar('My Title');
 
         $this->repository->save($fixture, true);
 
@@ -92,6 +98,8 @@ class UserControllerTest extends WebTestCase
             'user[roles]' => 'Something New',
             'user[password]' => 'Something New',
             'user[isVerified]' => 'Something New',
+            'user[name]' => 'Something New',
+            'user[avatar]' => 'Something New',
         ]);
 
         self::assertResponseRedirects('/user/');
@@ -102,6 +110,8 @@ class UserControllerTest extends WebTestCase
         self::assertSame('Something New', $fixture[0]->getRoles());
         self::assertSame('Something New', $fixture[0]->getPassword());
         self::assertSame('Something New', $fixture[0]->getIsVerified());
+        self::assertSame('Something New', $fixture[0]->getName());
+        self::assertSame('Something New', $fixture[0]->getAvatar());
     }
 
     public function testRemove(): void
@@ -115,6 +125,8 @@ class UserControllerTest extends WebTestCase
         $fixture->setRoles('My Title');
         $fixture->setPassword('My Title');
         $fixture->setIsVerified('My Title');
+        $fixture->setName('My Title');
+        $fixture->setAvatar('My Title');
 
         $this->repository->save($fixture, true);
 

@@ -15,10 +15,16 @@
 			<div class="modal-dialog modal-dialog-scrollable" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="maModaleLabel{{ loop.index }}">{{ figure.name }}</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
 							<span aria-hidden="true">&times;</span>
 						</button>
+						<h5 class="modal-title" id="maModaleLabel{{ loop.index }}">{{ figure.name }}</h5>
+{% if app.user %}
+						    <div class="text-center my-5">
+    {{ include('figure/_delete_form.html.twig') }}     
+                        <a href="{{ path('app_figure_edit', {'id': figure.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i>éditer</a>
+	</div>
+{% endif %}
 					</div>
 					<div class="modal-body">
 						<div class="border p-3">
@@ -44,7 +50,7 @@
 									{% for comment in figure.comments|reverse %}
 										<div class="media">
 											<div class="media-body">
-												<h5 class="mt-0">{{ comment.author.name }}<img src="data:image/png;base64, {{ comment.author.avatar }}" alt="Avatar de l'utilisateur"></h5>
+												<h5 class="mt-0">{{ comment.author.name }}<img src="avatars/{{ comment.author.avatar }}" alt="Avatar de l'utilisateur"></h5>
 												{{ comment.content }}
 												(Le {{ comment.createdAt|date('d/m/Y H:i:s') }})
 											</div>

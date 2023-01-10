@@ -8,26 +8,17 @@ use App\Entity\Groupe;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class FigureType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('description')
-            ->add('CreatedAt')
-            ->add('modifiedAt')
-            ->add('imgfilename')
-            ->add('groupe', EntityType::class, [
-                'class' => Groupe::class,
-                'choice_label' => 'name', // Utilisez le nom de l'entité Groupe comme étiquette de choix
-            ])
-            ->add('author', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'email', // Utilisez le nom de l'entité Author comme étiquette de choix
-            ]);
+            ->add('name', TextType::class, ["label" => "Le nom de la figure"])
+            ->add('description', TextareaType::class, ["label" => "Description de la figure"]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
