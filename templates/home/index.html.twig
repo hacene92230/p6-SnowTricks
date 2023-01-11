@@ -19,12 +19,13 @@
 							<span aria-hidden="true">&times;</span>
 						</button>
 						<h5 class="modal-title" id="maModaleLabel{{ loop.index }}">{{ figure.name }}</h5>
-{% if app.user %}
-						    <div class="text-center my-5">
-    {{ include('figure/_delete_form.html.twig') }}     
-                        <a href="{{ path('app_figure_edit', {'id': figure.id}) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i>éditer</a>
-	</div>
-{% endif %}
+						{% if app.user %}
+							<div class="text-center my-5">
+								{{ include('figure/_delete_form.html.twig') }}
+								<a href="{{ path('app_figure_edit', {'id': figure.id}) }}" class="btn btn-primary btn-sm">
+									<i class="fas fa-edit"></i>éditer</a>
+							</div>
+						{% endif %}
 					</div>
 					<div class="modal-body">
 						<div class="border p-3">
@@ -47,41 +48,85 @@
 						<div class="container">
 							<div class="row">
 								<div class="col-md-9">
-									{% for comment in figure.comments|reverse %}
-										<div class="media">
-											<div class="media-body">
+									<div id="comments-container">
+										{% for comment in figure.comments|reverse %}
+											<div class="comment" data-id="{{ comment.id }}">
 												<h5 class="mt-0">{{ comment.author.name }}<img src="avatars/{{ comment.author.avatar }}" alt="Avatar de l'utilisateur"></h5>
 												{{ comment.content }}
-												(Le {{ comment.createdAt|date('d/m/Y H:i:s') }})
+												(Le
+												{{ comment.createdAt|date('d/m/Y H:i:s') }})
 											</div>
-										</div>
-									{% endfor %}
-								</div>
-								{% if app.user %}
-									<div class="col-md-3">
-										<form id="form-{{ figure.id }}" action="{{ url('app_comments_new', {'figure': figure.id}) }}" method="post" class="ml-auto">
-											{{ form_widget(forms[figure.id]) }}
-											<button type="submit">Envoyer</button>
-										</form>
+										{% endfor %}
 									</div>
-								{% endif %}
+									<div class="pagination-container">
+										<nav id="pagination">
+											<ul class="pagination">
+												<li class="page-item">
+													<a class="page-link" href="#" id="prev-page">Précédent</a>
+												</li>
+												<li class="page-item"></li>
+                                        <a class="page-link" href="#" id="next-page">Suivant</a>
+                                    </li>
+                                </ul>
+                                </nav>
+                                </div>
+                                </div>
+											{% if app.user %}
+												<div class="col-md-3">
+													<form id="form-{{ figure.id }}" action="{{ url('app_comments_new', {'figure': figure.id}) }}" method="post" class="ml-auto">
+														{{ form_widget(forms[figure.id]) }}
+														<button type="submit">Envoyer</button>
+													</form>
+												</div>
+											{% endif %}
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	{% endfor %}
-	<nav aria-label="Page">
-		<ul class="pagination">
-			{% for page in 1..total_pages %}
-				<li class="page-item{% if page == current_page %} active{% endif %}">
-					<a class="page-link" href="{{ path('app_home', {'page': page}) }}">{{ page }}</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</nav>
+				{% endfor %}
+				<nav aria-label="Page">
+					<ul class="pagination">
+						{% for page in 1..total_pages %}
+							<li class="page-item{% if page == current_page %} active{% endif %}">
+								<a class="page-link" href="{{ path('app_home', {'page': page}) }}">{{ page }}</a>
+							</li>
+						{% endfor %}
+					</ul>
+				</nav>
+	<script src="{{ asset('js/pagination.js') }}"></script>
+<script>
+    var comments = document.querySelectorAll('.comment');
+    var commentsPerPage = 6; 
+    var totalPages = Math.ceil(comments.length / commentsPerPage);
+    var currentPage = 1;
+    showPage(comments, currentPage, commentsPerPage);
+    document.getElementById("prev-page").addEventListener("click", function(){
+        if(currentPage > 1){
+            currentPage--;
+            showPage(comments, currentPage, commentsPerPage);
+        }
+    });
+    document.getElementById("next-page").addEventListener("click", function(){
+        if(currentPage < totalPages){
+            currentPage++;
+            showPage(comments, currentPage, commentsPerPage);
+        }
+    });
+    function showPage(comments, currentPage, commentsPerPage){
+        for (var i = 0; i < comments.length; i++) {
+            comments[i].style.display = "none";
+        }
+        var start = (currentPage-1) * commentsPerPage;
+        var end = start + commentsPerPage;
+        for (var i = start; i < end; i++) {
+            if(comments[i])
+                comments[i].style.display = "block";
+        }
+    }
+</script>
 {% endblock %}
