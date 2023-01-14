@@ -3,12 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Medias;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/figure')]
 class FigureController extends AbstractController
@@ -69,7 +70,7 @@ class FigureController extends AbstractController
     #[Route('/{id}', name: 'app_figure_delete', methods: ['POST'])]
     public function delete(Request $request, Figure $figure, FigureRepository $figureRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$figure->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
             $figureRepository->remove($figure, true);
         }
 

@@ -29,7 +29,7 @@ class Figure
 
     #[ORM\ManyToOne(inversedBy: 'figures')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?groupe $groupe = null;
+    private ?Groupe $groupe = null;
 
     #[ORM\ManyToOne(inversedBy: 'figures')]
     #[ORM\JoinColumn(nullable: false)]
@@ -38,9 +38,13 @@ class Figure
     #[ORM\OneToMany(mappedBy: 'figure', targetEntity: comments::class)]
     private Collection $comments;
 
+    #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Medias::class)]
+    private Collection $medias;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->medias = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,6 +148,36 @@ class Figure
             // set the owning side to null (unless already changed)
             if ($comment->getFigure() === $this) {
                 $comment->setFigure(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Medias>
+     */
+    public function getMedias(): Collection
+    {
+        return $this->medias;
+    }
+
+    public function addMedia(Medias $media): self
+    {
+        if (!$this->medias->contains($media)) {
+            $this->medias->add($media);
+            $media->setFigure($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedia(Medias $media): self
+    {
+        if ($this->medias->removeElement($media)) {
+            // set the owning side to null (unless already changed)
+            if ($media->getFigure() === $this) {
+                $media->setFigure(null);
             }
         }
 
