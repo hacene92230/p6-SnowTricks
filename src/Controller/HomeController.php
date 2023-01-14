@@ -20,24 +20,14 @@ class HomeController extends AbstractController
     {
         $this->formFactory = $formFactory;
     }
-    const FIGURES_PER_PAGE = 5;
-    
-    #[Route('/homes/page/{page}', name: 'app_home')]
+    const ITEMS_PER_PAGE = 6;
+    #[Route('/home/figure/page/{page}', name: 'app_home')]
     public function index(Request $request, FigureRepository $fgr, int $page = 1): Response
     {
-        // Récupération du nombre total d'éléments à paginer
         $totalItems = $fgr->count([]);
-
-        // Calcul du nombre total de pages en divisant le nombre total d'éléments par le nombre d'éléments par page
-        $totalPages = ceil($totalItems / self::FIGURES_PER_PAGE);
-
-        // Calcul de l'offset à partir du numéro de la page courante et du nombre d'éléments par page
-        $offset = ($page - 1) * self::FIGURES_PER_PAGE;
-
-        // Récupération des figures de la page courante à partir de l'offset et du nombre d'éléments par page
-        $figures = $fgr->findBy([], [], self::FIGURES_PER_PAGE, $offset);
-
-        // Création des formulaires de commentaire pour chaque figure
+        $totalPages = ceil($totalItems / self::ITEMS_PER_PAGE);
+        $offset = ($page - 1) * self::ITEMS_PER_PAGE;
+        $figures = $fgr->findBy([], [], self::ITEMS_PER_PAGE, $offset);
         $forms = [];
         foreach ($figures as $figure) {
             $comment = new Comments();
@@ -46,19 +36,13 @@ class HomeController extends AbstractController
             $forms[$figure->getId()] = $form->createView();
             unset($form);
         }
-
-        // Affichage de la vue avec les données de pagination
         return $this->renderForm('home/index.html.twig', [
             'figures' => $figures,
             'current_page' => $page,
-            'figurePagesCount' => $totalPages,
+            'total_pages' => $totalPages,
             'forms' => $forms,
-            'page' => $page,
-
-            'total_pages' => $totalPages
         ]);
     }
-
 
 
 

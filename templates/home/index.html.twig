@@ -44,11 +44,10 @@
 							<h2 class="font-weight-bold">Dernière modification</h2>
 							<p>{{ figure.modifiedAt|date("d/m/Y") }}</p>
 						</div>
-						<h2 class="font-weight-bold text-center mb-3">Commentaires</h2>
+						<h2 class="font-weight-bold">Commentaires</h2>
 						<div class="container">
 							<div class="row">
 								<div class="col-md-9">
-<<<<<<< HEAD
 									<div id="comments-container">
 										{% for comment in figure.comments|reverse %}
 											<div class="comment" data-id="{{ comment.id }}">
@@ -87,48 +86,10 @@
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-=======
-									{% set visibleCommentsCount = 0 %}
-									{% set hiddenCommentsCount = figure.comments|length %}
-									{% set start = 0 %}
-									{% set end = 6 %}
-									{% for comment in figure.comments %}
-										{% if visibleCommentsCount < 6 %}
-											<div class="media">
-												<img src="data:image/png;base64, {{ comment.author.avatar }}" alt="Avatar de l'utilisateur" class="mr-3 rounded-circle" style="width: 50px;">
-												<div class="media-body">
-													<h5 class="mt-0">{{ comment.author.name }}</h5>
-													{{ comment.content }}
-													(Le
-													{{ comment.createdAt|date('d/m/Y H:i:s') }})
-												</div>
-											</div>
-											{% set visibleCommentsCount = visibleCommentsCount + 1 %}
-										{% else %}
-											<div class="media" style="display: none;">
-												<img src="data:image/png;base64, {{ comment.author.avatar }}" alt="Avatar de l'utilisateur" class="mr-3 rounded-circle" style="width: 50px;">
-												<div class="media-body">
-													<h5 class="mt-0">{{ comment.author.name }}</h5>
-													{{ comment.content }}
-													(Le
-													{{ comment.createdAt|date('d/m/Y H:i:s') }})
-												</div>
-											</div>
-										{% endif %}
-									{% endfor %}
-								</div>
-								<div class="col-md-3">
-									<div>
-										<button id="show-more-comments" class="btn btn-primary" data-start="{{ start }}" data-end="{{ end }}" style="display: {% if hiddenCommentsCount == 0 %}none{% endif %}">Voir les 6 suivants ({{ start }}/{{ hiddenCommentsCount }})</button>
-										<button id="hide-comments" class="btn btn-secondary" style="display: {% if visibleCommentsCount <= 6 %}none{% endif %}" data-start="{{ start }}" data-end="{{ end }}">Masquer les 6 précédents ({{ start }}/{{ figure.comments|length }})</button>
-										</div>
-									</div>
->>>>>>> 7321d6a3f58acc4f2e226776fd41d598d9c63913
 								</div>
 							</div>
 						</div>
 					</div>
-<<<<<<< HEAD
 				{% endfor %}
 				<nav aria-label="Page">
 					<ul class="pagination">
@@ -171,60 +132,3 @@
     }
 </script>
 {% endblock %}
-=======
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-				</div>
-			</div>
-		</div>
-	</div>
-{% endfor %}
-										<nav aria-label="Page">
-											<ul class="pagination justify-content-center">
-												{% for page in 1..total_pages %}
-													<li class="page-item{% if page == current_page %} active{% endif %}">
-														<a class="page-link" href="{{ path('app_home', {'page': page}) }}">{{ page }}</a>
-													</li>
-												{% endfor %}
-											</ul>
-										</nav>
-
-<script>
-	document.getElementById('show-more-comments').addEventListener('click', function () {
-		var start = parseInt(this.getAttribute('data-start'));
-		var end = parseInt(this.getAttribute('data-end'));
-		var hiddenComments = document.querySelectorAll('.media[style="display: none;"]');
-		if (hiddenComments.length > 0) {
-			for (var i = start; i < end; i++) {
-				hiddenComments[i].style.display = 'block';
-			}
-			this.style.display = 'none';
-			document.getElementById('hide-comments').style.display = 'inline';
-			document.getElementById('hide-comments').setAttribute('data-start', start);
-			document.getElementById('hide-comments').setAttribute('data-end', end);
-			this.setAttribute('data-start', end);
-			this.setAttribute('data-end', end + 6);
-			this.innerHTML = 'Voir les 6 suivants (' + end + '/' + hiddenComments.length + ')';
-			document.getElementById('hide-comments').innerHTML = 'Masquer les 6 précédents (' + start + '/' + hiddenComments.length + ')';
-		}
-	});
-	document.getElementById('hide-comments').addEventListener('click', function () {
-		var start = parseInt(this.getAttribute('data-start'));
-		var end = parseInt(this.getAttribute('data-end'));
-		var visibleComments = document.querySelectorAll('.media:not([style="display: none;"])');
-		for (var i = start; i < end; i++) {
-			visibleComments[i].style.display = 'none';
-		}
-		this.style.display = 'none';
-		document.getElementById('show-more-comments').style.display = 'inline';
-		document.getElementById('show-more-comments').setAttribute('data-start', start);
-		document.getElementById('show-more-comments').setAttribute('data-end', end);
-		this.setAttribute('data-start', start - 6);
-		this.setAttribute('data-end', end - 6);
-		this.innerHTML = 'Masquer les 6 précédents (' + (start - 6) + '/' + visibleComments.length + ')';
-		document.getElementById('show-more-comments').innerHTML = 'Voir les 6 suivants (' + (end - 6) + '/' + visibleComments.length + ')';
-	});
-</script>
-									{% endblock %}
->>>>>>> 7321d6a3f58acc4f2e226776fd41d598d9c63913
