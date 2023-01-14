@@ -27,7 +27,7 @@ class Figure
     #[ORM\Column]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'figures')]
+    #[ORM\ManyToOne(inversedBy: 'Groupe')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
 
