@@ -25,12 +25,16 @@
 						{% endif %}
 						
 </nav>
-		        {% for message in app.flashes('success') %}
-		            <div class="alert alert-success">
-					{{ message }}
-					            </div>
-								        {% endfor %}
-										
+{% for type, messages in app.session.flashbag.all %}
+    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endfor %}
 		<main>
 		{% block body %}{% endblock %}
 		</main>

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Figure;
 use App\Entity\Medias;
+use DateTimeImmutable;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,11 +31,23 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $videos = $form->get('videos')->getData();
+            $images = $form->get('images')->getData();
+            if ($images == null and $videos == null) {
+                $this->addFlash("danger", 'Vous devez mettre soit une vidéo, ou bien une image, les deux fonctionne, mais vous ne pouvez pas rien mettre');
+                return $this->renderForm('figure/new.html.twig', [
+                    'figure' => $figure,
+                    'form' => $form,
+                ]);
+            }
+
+            $figure->setCreatedAt(new DateTimeImmutable())
+                ->setModifiedAt(new DateTimeImmutable())
+                ->setAuthor($this->getUser());
             $figureRepository->save($figure, true);
-
-            return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash("success", 'Votre figure à correctement été créer');
+            return $this->redirectToRoute('app_home');
         }
-
         return $this->renderForm('figure/new.html.twig', [
             'figure' => $figure,
             'form' => $form,
@@ -57,8 +70,8 @@ class FigureController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $figureRepository->save($figure, true);
-
-            return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash("warning", "La modification s'est correctement effectuer");
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('figure/edit.html.twig', [
@@ -73,7 +86,7 @@ class FigureController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
             $figureRepository->remove($figure, true);
         }
-
-        return $this->redirectToRoute('app_figure_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash("danger", "La figure vient d'être supprimer");
+        return $this->redirectToRoute('app_home');
     }
 }

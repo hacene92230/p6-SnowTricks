@@ -44,6 +44,10 @@
 							<h2 class="font-weight-bold">Dernière modification</h2>
 							<p>{{ figure.modifiedAt|date("d/m/Y") }}</p>
 						</div>
+						<div class="border p-3">
+						<h2 class="font-weight-bold">Créer par</h2>
+						<p>{{ figure.author.name }}</p>
+						</div>
 						<h2 class="font-weight-bold">Commentaires</h2>
 						<div class="container">
 							<div class="row">
@@ -100,7 +104,6 @@
 						{% endfor %}
 					</ul>
 				</nav>
-	<script src="{{ asset('js/pagination.js') }}"></script>
 <script>
     var comments = document.querySelectorAll('.comment');
     var commentsPerPage = 6; 

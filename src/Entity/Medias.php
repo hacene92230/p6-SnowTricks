@@ -13,15 +13,15 @@ class Medias
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $images;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $images = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $videos;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $videos = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Medias')]
+    #[ORM\ManyToOne(inversedBy: 'medias')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Figure $figure = null;
+    private ?Figure $figures = null;
 
     public function getId(): ?int
     {
@@ -33,7 +33,7 @@ class Medias
         return $this->images;
     }
 
-    public function setImages(string $images): self
+    public function setImages(?string $images): self
     {
         $this->images = $images;
 
@@ -45,21 +45,21 @@ class Medias
         return $this->videos;
     }
 
-    public function setVideos(string $videos): self
+    public function setVideos(?string $videos): self
     {
         $this->videos = $videos;
 
         return $this;
     }
 
-    public function getFigure(): ?Figure
+    public function getFigures(): ?Figure
     {
-        return $this->figure;
+        return $this->figures;
     }
 
-    public function setFigure(?Figure $figure): self
+    public function setFigures(?Figure $figures): self
     {
-        $this->figure = $figure;
+        $this->figures = $figures;
 
         return $this;
     }

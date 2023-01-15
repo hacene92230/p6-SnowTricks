@@ -27,7 +27,7 @@ class Figure
     #[ORM\Column]
     private ?\DateTimeImmutable $modifiedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Groupe')]
+    #[ORM\ManyToOne(inversedBy: 'figure')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Groupe $groupe = null;
 
@@ -38,7 +38,7 @@ class Figure
     #[ORM\OneToMany(mappedBy: 'figure', targetEntity: comments::class)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Medias::class)]
+    #[ORM\OneToMany(mappedBy: 'figures', targetEntity: Medias::class)]
     private Collection $medias;
 
     public function __construct()
@@ -166,7 +166,7 @@ class Figure
     {
         if (!$this->medias->contains($media)) {
             $this->medias->add($media);
-            $media->setFigure($this);
+            $media->setFigures($this);
         }
 
         return $this;
@@ -176,8 +176,8 @@ class Figure
     {
         if ($this->medias->removeElement($media)) {
             // set the owning side to null (unless already changed)
-            if ($media->getFigure() === $this) {
-                $media->setFigure(null);
+            if ($media->getFigures() === $this) {
+                $media->setFigures(null);
             }
         }
 

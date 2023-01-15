@@ -5,13 +5,14 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Figure;
 use App\Entity\Groupe;
-use App\Entity\Medias;
-use App\Form\MediaType;
 use App\Repository\FigureRepository;
+use App\Repository\GroupeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -24,21 +25,29 @@ class FigureType extends AbstractType
         $builder
             ->add('groupe', EntityType::class, [
                 'label' => "Choix du groupe de la figure",
-                'class' => Figure::class,
+                'class' => Groupe::class,
                 'choice_label' => 'name',
-                'query_builder' => function (FigureRepository $er) {
-                    return $er->createQueryBuilder('f')
-                        ->orderBy('f.name', 'ASC');
+                'query_builder' => function (GroupeRepository $er) {
+                    return $er->createQueryBuilder('g')
+                        ->orderBy('g.name', 'ASC');
                 },
             ])
             ->add('name', TextType::class, ["label" => "Nom de la figure"])
             ->add('description', TextareaType::class, ["label" => "Description de la figure"])
-            ->add('medias', CollectionType::class, [
-                'entry_type' => MediaType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false
-            ]);
+            ->add("images", FileType::class, [
+                "mapped" => false,
+                "required" => false,
+                "label" => "Télécharger une image pour illustrer votre figure"
+            ])
+            ->add(
+                "videos",
+                UrlType::class,
+                [
+                    "mapped" => false,
+                    "required" => false,
+                    "label" => "Insérez une vidéo à partir de son url"
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
