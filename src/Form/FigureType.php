@@ -5,10 +5,12 @@ namespace App\Form;
 use App\Entity\User;
 use App\Entity\Figure;
 use App\Entity\Groupe;
+use App\Form\MediasType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupeRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Url;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -41,8 +43,12 @@ class FigureType extends AbstractType
             ])
             ->add(
                 "videos",
-                UrlType::class,
+                TextType::class,
                 [
+                    'constraints' => [
+                        new Url(),
+                    ],
+
                     "mapped" => false,
                     "required" => false,
                     "label" => "Insérez une vidéo à partir de son url"

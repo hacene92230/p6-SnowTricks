@@ -38,7 +38,7 @@ class Figure
     #[ORM\OneToMany(mappedBy: 'figure', targetEntity: comments::class)]
     private Collection $comments;
 
-    #[ORM\OneToMany(mappedBy: 'figures', targetEntity: Medias::class)]
+    #[ORM\OneToMany(mappedBy: 'figures', targetEntity: Medias::class, cascade: ['remove'])]
     private Collection $medias;
 
     public function __construct()

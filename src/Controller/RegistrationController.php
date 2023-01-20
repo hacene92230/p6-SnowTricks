@@ -30,9 +30,6 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, LoginAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
-        if (!empty($this->getUser())) {
-            return $this->redirectToRoute('home');
-        }
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -55,7 +52,7 @@ class RegistrationController extends AbstractController
             }
 
             // Générez un nom unique pour l'image en utilisant la date du jour et l'identifiant de l'utilisateur
-            $filename = date('Y-m-d') . '-' . microtime(true) . '.jpg';
+            $filename = date('Y-m-d') . '-' . $this->getUser()->getId() . '.jpg';
             // Enregistrez l'image sur le serveur
             try {
                 $image->move($this->getParameter('images_directory'), $filename);
@@ -79,7 +76,7 @@ class RegistrationController extends AbstractController
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
             // do anything else you need here, like send an email
-
+            $this->addFlash('success', "Votre inscription à bien été prise en compte");
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,

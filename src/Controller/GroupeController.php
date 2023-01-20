@@ -30,8 +30,8 @@ class GroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $groupeRepository->save($groupe, true);
-
-            return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', "Vous venez de créer un nouveau groupe!");
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->renderForm('groupe/new.html.twig', [
@@ -56,8 +56,8 @@ class GroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $groupeRepository->save($groupe, true);
-
-            return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash("success", "Le groupe à été mis à jour");
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->renderForm('groupe/edit.html.twig', [
@@ -69,10 +69,10 @@ class GroupeController extends AbstractController
     #[Route('/{id}', name: 'app_groupe_delete', methods: ['POST'])]
     public function delete(Request $request, Groupe $groupe, GroupeRepository $groupeRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$groupe->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $groupe->getId(), $request->request->get('_token'))) {
             $groupeRepository->remove($groupe, true);
         }
-
-        return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
+        $this->addFlash('warning', "Le groupe à bien été supprimer");
+        return $this->redirectToRoute('app_home');
     }
 }

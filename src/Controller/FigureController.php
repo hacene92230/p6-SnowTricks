@@ -7,6 +7,7 @@ use App\Entity\Medias;
 use DateTimeImmutable;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use App\Repository\MediasRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +25,7 @@ class FigureController extends AbstractController
     }
 
     #[Route('/new', name: 'app_figure_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FigureRepository $figureRepository): Response
+    public function new(Request $request, FigureRepository $figureRepository, MediasRepository $mediasRepository): Response
     {
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -40,11 +41,37 @@ class FigureController extends AbstractController
                     'form' => $form,
                 ]);
             }
-
             $figure->setCreatedAt(new DateTimeImmutable())
                 ->setModifiedAt(new DateTimeImmutable())
                 ->setAuthor($this->getUser());
+            $medias = new Medias();
+            try {
+                // Vérifiez si un nouvel avatar a été téléchargé
+                if ($images) {
+                    // Vérifiez que l'image est au format JPG
+                    if ($images->getMimeType() !== 'image/jpeg') {
+                        throw new Exception('L\'image doit être au format JPG');
+                    }
+                    // Vérifiez que l'image a été correctement téléchargée
+                    if (!$images->isValid()) {
+                        throw new Exception('L\'image n\'a pas été correctement téléchargée');
+                    }
+                    // Générez un nom unique pour l'image en utilisant la date du jour et l'identifiant de l'utilisateur
+                    $filename = uniqid() . '.jpg';
+                    // Enregistrez l'image sur le serveur
+                    $images->move($this->getParameter('figures_directory'), $filename);
+                    // Mettez à jour l'avatar de l'utilisateur avec le nouveau nom de fichier
+                    $medias->setImages($filename);
+                }
+            } catch (FileException $e) {
+                // Affichez un message d'erreur et la trace de l'exception
+                $this->addFlash('danger', $e->getMessage());
+                return $this->redirectToRoute('app_home');
+            }
+            $medias->setVideos($videos)
+                ->setFigures($figure);
             $figureRepository->save($figure, true);
+            $mediasRepository->save($medias, true);
             $this->addFlash("success", 'Votre figure à correctement été créer');
             return $this->redirectToRoute('app_home');
         }
@@ -71,7 +98,7 @@ class FigureController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $figureRepository->save($figure, true);
             $this->addFlash("warning", "La modification s'est correctement effectuer");
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->renderForm('figure/edit.html.twig', [
@@ -84,9 +111,15 @@ class FigureController extends AbstractController
     public function delete(Request $request, Figure $figure, FigureRepository $figureRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
-            $figureRepository->remove($figure, true);
+            //$figureRepository->remove($figure, true);
+            foreach ($figure->getMedias() as $cle => $valeur) {
+                $file = $this->getParameter('figures_directory') . "/" . $valeur->getImages();
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
         }
-        $this->addFlash("danger", "La figure vient d'être supprimer");
+        $this->addFlash("danger", "La figure ainsi que tout les éléments associés viennent d'être supprimer");
         return $this->redirectToRoute('app_home');
     }
 }

@@ -53,9 +53,9 @@ class CommentsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commentsRepository->save($comment, true);
-
-            return $this->redirectToRoute('app_comments_index', [], Response::HTTP_SEE_OTHER);
-        }
+                        return $this->redirectToRoute('apphome_');
+                        $this->addFlash('success', "Votre commentaire à bien été publier");
+                    }
 
         return $this->renderForm('comments/edit.html.twig', [
             'comment' => $comment,
