@@ -1,0 +1,9 @@
+analyse:
+https://app.codacy.com/gh/hacene92230/p6-SnowTricks/dashboard
+
+projet, repository:
+
+https://github.com/hacene92230/p6-SnowTricks/
+
+issus:
+https://github.com/hacene92230/p6-SnowTricks/issues?q=is%3Aissue+is%3Aclosed
