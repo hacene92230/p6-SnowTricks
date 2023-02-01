@@ -33,7 +33,6 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -52,7 +51,7 @@ class RegistrationController extends AbstractController
             }
 
             // Générez un nom unique pour l'image en utilisant la date du jour et l'identifiant de l'utilisateur
-            $filename = date('Y-m-d') . '-' . $this->getUser()->getId() . '.jpg';
+            $filename = date('Y-m-d') . '-' . '.jpg';
             // Enregistrez l'image sur le serveur
             try {
                 $image->move($this->getParameter('images_directory'), $filename);
@@ -93,7 +92,7 @@ class RegistrationController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        // validate email confirmation link, sets User::isVerified=true and persists
+        //validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
@@ -105,6 +104,6 @@ class RegistrationController extends AbstractController
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_home');
     }
 }
