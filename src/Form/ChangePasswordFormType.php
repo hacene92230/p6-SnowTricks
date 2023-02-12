@@ -17,10 +17,15 @@ class ChangePasswordFormType extends AbstractType
         $builder
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
+                'options' => [
+                    'attr' => [
+                        'autocomplete' => 'new-password',
+                    ],
+                ],
                 'first_options' => [
                     'constraints' => [
                         new NotBlank([
-                            'message' => 'Veuillez entrer un mot de passe',
+                            'message' => 'Please enter a password',
                         ]),
                         new Length([
                             'min' => 6,
@@ -29,10 +34,10 @@ class ChangePasswordFormType extends AbstractType
                             'max' => 4096,
                         ]),
                     ],
-                    'label' => 'Nouveau mot de passe',
+                    'label' => 'New password',
                 ],
                 'second_options' => [
-                    'label' => 'Répéter le mot de passe',
+                    'label' => 'Repeat Password',
                 ],
                 'invalid_message' => 'The password fields must match.',
                 // Instead of being set onto the object directly,

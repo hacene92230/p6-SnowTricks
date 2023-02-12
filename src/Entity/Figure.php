@@ -35,7 +35,7 @@ class Figure
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\OneToMany(mappedBy: 'figure', targetEntity: comments::class)]
+    #[ORM\OneToMany(mappedBy: 'figure', targetEntity: Comments::class)]
     private Collection $comments;
 
     #[ORM\OneToMany(mappedBy: 'figures', targetEntity: Medias::class, cascade: ['remove'])]
