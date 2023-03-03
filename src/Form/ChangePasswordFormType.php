@@ -16,6 +16,7 @@ class ChangePasswordFormType extends AbstractType
     {
         $builder
             ->add('plainPassword', RepeatedType::class, [
+                "required" => true,
                 'type' => PasswordType::class,
                 'options' => [
                     'attr' => [
@@ -43,8 +44,7 @@ class ChangePasswordFormType extends AbstractType
                 // Instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
