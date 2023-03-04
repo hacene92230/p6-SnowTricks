@@ -5,13 +5,15 @@
 {% endblock %}
 {% block body %}
 {% for figure in figures %}
-	<div class="row">
+	<div class="card bordered">
 		<h2>{{ figure.name }}</h2>
+		<div class="row">
 		{% for images in figure.medias %}
 			<div class="col-md-6">
-				<img src="figures/{{ images.images }}" class="img-fluid" alt="image de la figure">
+				<img src="/figures/{{ images.images }}" class="img-fluid" alt="image de la figure">
 			</div>
 		{% endfor %}
+		</div>
 		<div
 			class="col-md-12 text-center mt-3">
 			<!-- Bouton qui déclenchera la modale -->
