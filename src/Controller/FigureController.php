@@ -111,7 +111,7 @@ class FigureController extends AbstractController
     public function delete(Request $request, Figure $figure, FigureRepository $figureRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
-            //$figureRepository->remove($figure, true);
+            $figureRepository->remove($figure, true);
             foreach ($figure->getMedias() as $cle => $valeur) {
                 $file = $this->getParameter('figures_directory') . "/" . $valeur->getImages();
                 if (is_file($file)) {
